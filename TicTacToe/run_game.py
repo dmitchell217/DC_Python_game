@@ -1,6 +1,6 @@
 # this function runs the game. it will set up the game and walk the user through it
 import random
-from display_board import display_board
+import display_board
 from winner import winner
 def run_game():
     # Player one is Xs
@@ -32,18 +32,18 @@ def run_game():
                 continue
     # check to see if game is over
         if winner(moves, 'X'):
-            display_board(moves)
+            display_board.display_board(moves)
             print('Congrats Player 1! You win!')
             return True
         elif winner(moves, 'O'):
-            display_board(moves)
+            display_board.display_board(moves)
             print('You lost: the bullies are going to take your lunch for the next year. Get better at Tic Tac Toe. Start over to cultivate another garden')
             return False
         if '' not in moves:
-            display_board(moves)
+            display_board.display_board(moves)
             print('The game finished with no winner... Try harder next time.')
             return True
         player_flip = not player_flip
         count+=1 # to prevent infinite loop while testing
-        display_board(moves)
+        display_board.display_board(moves)
     return
