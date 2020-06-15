@@ -93,9 +93,10 @@ class Garden():
     
     def sell_fruit(self):
         # sells all fruit at a static price
-        self.fruit = 0
         self.money += (self.fruit*self.PRICE_fruit)
-        return print(f"You sold {self.fruit} fruit(s) for ${self.fruit*self.PRICE_fruit}")
+        count = self.fruit
+        self.fruit = 0
+        return print(f"You sold {count} fruit(s) for ${count*self.PRICE_fruit}")
         # 
         # if self.fruit < fruit_tosell:
         #     return print("You don't have enough fruit, come back later\n")
@@ -141,7 +142,6 @@ class Garden():
             else:
                 return print("You don't have enough money to buy a gun yet, sell a bit more fruit first.\n")
     def hunt(self):
-        # TO DO, ENSURE THIS FUNCTION WORKS
         guess = int(input("Pick a number between 0 and 8\n"))
         # determine if the garden has a gun
         if self.gun == False:
@@ -156,7 +156,8 @@ class Garden():
         for chuck_id, position in positions.items():
             if position == guess:
                 self.remove_item(chuck_id)
-                print("Ya got one!\n")
+                self.display_garden()
+                return print("Ya got one!\n")
         # display the garden
         self.display_garden()
         return print("Better luck next time.\n")
@@ -181,7 +182,7 @@ class Garden():
         for gnome in gnomes: 
             print(gnome, end =" ")
             
-
+ 
         # woodchucks visual (line)
         woodchucks = []
         [woodchucks.append(woodchuck_emoji) for x in range(0, len(self.in_garden["woodchucks"].keys()))]
