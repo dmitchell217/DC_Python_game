@@ -47,3 +47,4 @@ def run_game():
         count+=1 # to prevent infinite loop while testing
         display_board.display_board(moves)
     return
+# run_game()

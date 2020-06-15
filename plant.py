@@ -7,13 +7,14 @@ class Plant():
         self.absorb = absorb
         self.wither = wither
         self.fruit = fruit
+        # self.emoji = '✿'
     def run_day(self):
         self.age +=1
         # watering plants is automatic for now, once per day. Eventually will be input driven
         # self.water()
-    def e(self):
-        return print('✿')
     # self.wilt()
     # self.sprout()
 
     # def colorize()
+# newPlant = Plant()
+# print(newPlant.emoji)

@@ -13,14 +13,7 @@ black_dot = '•'
 
 class Garden():
     # think about adding fruit and money to the garden object so I can keep track more easily
-    def __init__(self, fruit=0, money=40):
-        # self.trees = trees
-        # self.gnomes = gnomes
-        # self.woodchucks = woodchucks
-        # trees = {}
-        # gnomes = {}
-        # woodchucks = {}
-        # dictionary of dictionaries. Id (hashes) are the keys of the nested dictionary
+    def __init__(self, fruit=0, money=80):
         self.in_garden = {"trees":{}, "gnomes":{}, "woodchucks":{}}
         # self.display = [None,None,None,None,None,None,None,None,None]
         self.TREECAP = 9
@@ -28,27 +21,24 @@ class Garden():
         [self.display.append(None) for x in range (0, self.TREECAP)]
         self.fruit = fruit
         self.money = money
-        self.trees_len = len(self.in_garden["trees"].keys())
-        self.gnomes_len = len(self.in_garden["gnomes"].keys())
-        self.woodchucks_len = len(self.in_garden["woodchucks"].keys())
+        # self.trees_len = len(self.in_garden["trees"].keys())
+        # self.gnomes_len = len(self.in_garden["gnomes"].keys())
+        # self.woodchucks_len = len(self.in_garden["woodchucks"].keys())
         self.PRICE_fruit = 10 # static variable for price of fruit
         self.PRICE_gnomes = 20 # static variable for price of gnomes
         self.PRICE_gun = 30 # static variable for price of gun
         self.PRICE_tree = 10 # static variable for price of tree
         self.gun = False # boolean for gun
     def info(self):
-        return (f"Your garden has the following items in it: \n {self.trees_len} trees, \n {self.gnomes_len} gnomes, \n and {self.woodchucks_len} woodchucks \n  You have {self.fruit} fruit and ${self.money} under your mattress\n")
+        trees_len = len(self.in_garden["trees"].keys())
+        gnomes_len = len(self.in_garden["gnomes"].keys())
+        woodchucks_len = len(self.in_garden["woodchucks"].keys())
+        return (f"Your garden has the following items in it: \n {trees_len} trees, \n {gnomes_len} gnomes, \n and {woodchucks_len} woodchucks \n  You have {self.fruit} fruit and ${self.money} under your mattress\n")
     
 
     def add_item(self, itemtype):
         # if the item is a tree...
         if itemtype == 'tree':
-            # go through store process
-            if self.money < self.PRICE_tree:
-                    print(f"You don't have enough money, come back later\n")
-                    return
-            else:
-                self.money -= self.PRICE_tree
             # make a new tree
             newTree = Tree()
             # loop through display and find the first available plot
@@ -74,18 +64,20 @@ class Garden():
             # access "in_garden" dict, use hash_code for a unique id, setting that equal to its class type
             # self.in_garden[itemtype+"s"][hash_code(itemtype)]=typeconvert[itemtype]() # will this code error out because it doesn't pass in variable parameters? solution = all default params
     
-    def remove_item(self, id):
+    def remove_item(self, id_string):
         # grab the type
-        itemtype = str(id).split("_")[1]
+        itemtype = str(id_string).split("_")[1]
+        if itemtype == 'tree':
+            # find tree using id search, the set self.display[index] 
+            for x in range(0, self.TREECAP):
+            # if find tree id in display list
+                if self.display[x] == None:
+                    pass
+                elif self.display[x].id == id_string:
+                    self.display[x] = None
         # delete key (id) from the corresponding dictionary in self.in_garden
         try:
-            removed_element = self.in_garden[itemtype].pop(id, None)
-            if itemtype == 'tree':
-                # find tree using id search, the set self.display[index] 
-                for x in range(0, self.TREECAP):
-                    # if i find tree id in display list
-                    if self.display[x].id == id:
-                        self.display[x] = None
+            removed_element = self.in_garden[itemtype+"s"].pop(id_string, None)
         # catch error key not found
         except:
             return print("Key not found\n")
@@ -99,28 +91,44 @@ class Garden():
         else:
             print(f"\n {itemtype} in garden: {self.in_garden[str(itemtype)]}\n")
     
-    def sell_fruit(self, fruit_tosell):
-        # sells x fruit at a static price
-        if self.fruit < fruit_tosell:
-            return print("You don't have enough fruit, come back later\n")
-        else:
-            self.money += fruit_tosell*self.PRICE_fruit
-            self.fruit -= fruit_tosell
-            return print(f"You sold {fruit_tosell} for {fruit_tosell*self.PRICE_fruit}\n")
+    def sell_fruit(self):
+        # sells all fruit at a static price
+        self.fruit = 0
+        self.money += (self.fruit*self.PRICE_fruit)
+        return print(f"You sold {self.fruit} fruit(s) for ${self.fruit*self.PRICE_fruit}")
+        # 
+        # if self.fruit < fruit_tosell:
+        #     return print("You don't have enough fruit, come back later\n")
+        # else:
+        #     self.money += fruit_tosell*self.PRICE_fruit
+        #     self.fruit -= fruit_tosell
+        #     return print(f"You sold {fruit_tosell} for ${fruit_tosell*self.PRICE_fruit}\n")
+
+    def buy_trees(self, trees_tobuy):
+        # buy x trees at a static price
+        count = 0
+        while count < trees_tobuy:
+            if self.money < self.PRICE_tree:
+                print(f"You don't have enough money, you bought {count} trees before running out of cash\n")
+                break
+            else:
+                self.money -= self.PRICE_tree
+                self.add_item("tree")
+                count+=1
+        return print(f"You bought {count} tree(s) for ${count*self.PRICE_tree}")
 
     def buy_gnomes(self, gnomes_tobuy):
         # buy x gnomes at a static price
         count = 0
         while count < gnomes_tobuy:
-            while True:
-                if self.money < self.PRICE_gnomes:
-                    print(f"You don't have enough money, you bought {count} gnomes before running out of cash\n")
-                    return
-                else:
-                    self.money -= self.PRICE_gnomes
-                    self.add_item("gnome")
-                    count+=1
-        return print(f"You bought {count} gnomes for ${count*self.PRICE_gnomes}")
+            if self.money < self.PRICE_gnomes:
+                print(f"You don't have enough money, you bought {count} gnomes before running out of cash\n")
+                break
+            else:
+                self.money -= self.PRICE_gnomes
+                self.add_item("gnome")
+                count+=1
+        return print(f"You bought {count} gnome(s) for ${count*self.PRICE_gnomes}")
     
     def buy_gun(self):
         if self.gun == True:
@@ -133,6 +141,7 @@ class Garden():
             else:
                 return print("You don't have enough money to buy a gun yet, sell a bit more fruit first.\n")
     def hunt(self):
+        # TO DO, ENSURE THIS FUNCTION WORKS
         guess = int(input("Pick a number between 0 and 8\n"))
         # determine if the garden has a gun
         if self.gun == False:
@@ -150,6 +159,7 @@ class Garden():
                 print("Ya got one!\n")
         # display the garden
         self.display_garden()
+        return print("Better luck next time.\n")
         
 
     def display_garden(self):
@@ -165,19 +175,40 @@ class Garden():
          \n ___________\n {dis[6]} | {dis[7]} | {dis[8]}')
 
         # gnomes visual (line)
-        print('\n')
-        [print(gnome_emoji + " | ") for x in range(0, self.gnomes_len)]
+        gnomes = []
+        [gnomes.append(gnome_emoji) for x in range(0, len(self.in_garden["gnomes"].keys()))]
+        print(f"\n{len(self.in_garden['gnomes'].keys())} gnome(s)")
+        for gnome in gnomes: 
+            print(gnome, end =" ")
             
 
         # woodchucks visual (line)
-        print('\n')
-        [print(woodchuck_emoji + " | ") for x in range(0, self.woodchucks_len)]
+        woodchucks = []
+        [woodchucks.append(woodchuck_emoji) for x in range(0, len(self.in_garden["woodchucks"].keys()))]
+        print(f"\n{len(self.in_garden['woodchucks'].keys())} woodchuck(s)")
+        for woodchuck in woodchucks: 
+            print(woodchuck, end =" ")
+        print("\n")
+
 # garden = Garden()
-# print(garden.display_garden())
-
-
-    
-    
+# print(garden.PRICE_tree)
+# print(garden.money)
+# garden.buy_trees(1)
+# print(garden.money)
+# garden.buy_gnomes(1)
+# print(garden.money)
+# garden.add_item("gnome")
+# garden.add_item("gnome")
+# garden.add_item("gnome")
+# garden.add_item("woodchuck")
+# garden.add_item("woodchuck")
+# garden.add_item("woodchuck")
+# # garden.add_item("tree")
+# # # garden.in_garden["trees"]
+# # # garden.add_item("gnome")
+# # # garden.in_garden["gnomes"]
+# garden.display_garden()
+# positions = {}
 
 
 
